@@ -1,0 +1,56 @@
+---
+layout: post
+title: 'Rails 3 Routes: Namespace subdomains'
+date: 2011-09-15 17:18:24.000000000 -04:00
+categories:
+- Programming
+- Ruby on Rails
+- Web
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  geo_latitude: '40.950376'
+  geo_longitude: "-73.827356"
+  geo_accuracy: '967'
+  geo_address: Tuckahoe, NY 10707, USA
+  geo_public: '0'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"11380825";s:7:"blog_id";s:8:"11073946";s:9:"mod_stamp";s:19:"2011-09-15
+    21:18:24";}
+author: 
+---
+<p>I ran into an issue at work today.  We have our rails site and it is separated into four distinct areas, all doing different things, but all on the same IP address.  To make sure things don't collide, we namespace each section and reuse when necessary, a perfectly standard object oriented way to do things.  This creates a problem though. We wanted subdomains to correspond with the namespace instead of the typical rails way where the namespace would be found tacked on to the end of the URL like so, example.com/namespace/controller/action/id.</p>
+<p>There were examples all over the internet on how to do this, or at least part of this, but many involved complex situations using a plugins or programming your own middleware to handle all this. Most of what I found required that you write a lot of code and sometimes with random results. There were a few that gave real knowledge I was able to piece together what I learned from some of those sources and found a great solution, let me explain.</p>
+<p>Let's say for example that you have a blog application and you have put your blog stuff in a namespace called blog. Then let's say you have an admin section on this blog and you namespace that to be admin.  So you have links like example.com/blog/post/2 and to edit that you would go to example.com/admin/post/2 . Your routes.rb may look something like this:</p>
+<pre>Rails.Application.routes.draw do
+  namespace :blog do
+    match 'post/:id' =&gt; 'post#show'
+    match 'post' =&gt; 'post#index'
+  end
+  namespace :admin do
+    match 'post/:id' =&gt; 'admin#show'
+  end
+end</pre>
+<p>Now lets say you've created the subdomains admin and blog to deal with these separately.  These subdomains undoubtedly point to the same place. So admin.example.com/blog/post/2 will point to the same place as blog.example.com/blog/post/2 despite having different subdomains. Using contraints we can now restrict the traffic and where it goes.  Contraints allow us to see the subdomain and match it on a regular expression, code would change to look something like this:</p>
+<pre>Rails.Application.routes.draw do
+  constraints(:subdomain =&gt; /blog/) do
+    namespace :blog do
+      match 'post/:id' =&gt; 'post#show'
+      match 'post' =&gt; 'post#index'
+    end
+  end
+  constraints(:subdomain =&gt; /admin/) do
+    namespace :admin do
+      match 'post/:id' =&gt;'admin#show'
+    end
+  end
+end</pre>
+<p>You'll notice that I've added contraints and within this contraint we have :subdomain which returns the name of the subdomain of our URL and the =&gt; /blog/ checks to see if the subdomain contains the word blog.  You can use any manner of regex in here and if it finds the expression then it will move on to the next item.</p>
+<p>So this is great, we now have links like admin.example.com/admin/post/2, but blog.example.com/admin/post/2 will not work, which is what we want.  But there is a small problem, admin.example.com/admin/post/2 is redundant. To remove this we can modify our code ever so slightly on the namespace line:</p>
+<pre>namespace :blog, :path =&gt; '/' do
+namespace :admin, :path =&gt; '/' do</pre>
+<p>These small little changes will mean that now things like blog.example.com/post/2 will be the same as the old example.com/blog/post/2, or admin.example.com/post/2 the same as the old example.com/admin/post/2</p>
+<p>To me, this is as clean as you can get, but there is a drawback.  The changes put in place mean that we can no longer use our previous paths. They are gone, in favor of subdomains.</p>
+<p>I hope that helps someone down the line.</p>
+<p>@tab</p>

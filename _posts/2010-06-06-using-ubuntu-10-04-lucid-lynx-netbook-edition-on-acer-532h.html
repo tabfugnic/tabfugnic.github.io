@@ -1,0 +1,48 @@
+---
+layout: post
+title: Using Ubuntu 10.04 Lucid Lynx Netbook Edition on Acer 532h
+date: 2010-06-06 12:27:43.000000000 -04:00
+categories:
+- Life
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  geo_latitude: '30.246036'
+  geo_longitude: "-87.700819"
+  geo_accuracy: '6966'
+  geo_address: 'Scarsdale, NY '
+  geo_public: '0'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"11380825";s:7:"blog_id";s:8:"11073946";s:9:"mod_stamp";s:19:"2010-06-06
+    19:19:25";}
+author: 
+---
+<p>There are several listings all over the Internet on all the problems associated with the 532h and the Ubuntu Netbook Edition, but I'd like to consolidate some of the problems.  This guide will hopefully add more redundancy to the searches made by others and point them in the right direction.</p>
+<p>All solutions I've come across are from here <a href="https://wiki.ubuntu.com/HardwareSupport/Machines/Netbooks" target="_blank">https://wiki.ubuntu.com/HardwareSupport/Machines/Netbooks</a></p>
+<p>Known problems:</p>
+<ol>
+<li>Trackpad multigesture support</li>
+<li>Trackpad side scrolling support</li>
+<li>SD Card Reader</li>
+<li>Microphone</li>
+<li>Some Fn + Key combinations</li>
+<li>Brightness controls are a bit funky</li>
+</ol>
+<p>Some Solutions</p>
+<ul>
+<li>Trackpad side scroller fix</li>
+</ul>
+<ol></ol>
+<p>Go to terminal and type the command:</p>
+<blockquote><p>gksu gedit /etc/modprobe.d/psmouse.conf</p></blockquote>
+<p>When that comes up add the line:</p>
+<blockquote><p>options psmouse proto=imps</p></blockquote>
+<p>Reboot and it should work</p>
+<ul>
+<li>Microphone workaround</li>
+</ul>
+<p>To fix the microphone is a bit more difficult, there is no permanent fix that I'm aware of</p>
+<p>You just need to in the terminal type the following:</p>
+<blockquote><p>/bin/sh/ -c "PULSE-SERVER=127.0.0.1 program-name"</p></blockquote>
+<p>Where program name is the command line name of skype, gnome-sound-recorder, etc.</p>

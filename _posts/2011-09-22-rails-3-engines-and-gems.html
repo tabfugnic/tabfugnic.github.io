@@ -1,0 +1,27 @@
+---
+layout: post
+title: Rails 3 Engines and Gems
+date: 2011-09-22 09:51:50.000000000 -04:00
+categories:
+- Programming
+- Ruby on Rails
+- Web
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  geo_latitude: '40.950376'
+  geo_longitude: "-73.827356"
+  geo_accuracy: '967'
+  geo_address: Tuckahoe, NY 10707, USA
+  geo_public: '0'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"11380825";s:7:"blog_id";s:8:"11073946";s:9:"mod_stamp";s:19:"2011-09-22
+    13:52:17";}
+author: 
+---
+<p>This isn't going to be a really long posting on how to create and implement engines in your rails app.  This is specifically regarding the gemspec and the gemfile in a rails engine.  Within a rails engine you have a Gemfile which is used for your engine any time you need to use it as a standalone app. Then you have a gemspec which defines the parameters of your engine and the dependencies therein.  Which means engines are really just treated as big gems that can be run as standalone apps, though I guess this isn't necessarily true.</p>
+<p>Defining the parameters such as name, version and things like that are pretty straightforward, but the dependencies needs to be understood.  Basically anything that is labeled as a dependency is exactly what it sounds like, it is dependent on that gem.  If you are using bundler, then anytime you run a "bundle update" on the application that is using that engine will automatically install all dependencies.  Which means you don't need to do any other leg work on the main application to get these files.  Which also means that you don't need to explicitly declare these gems in your Gemfile in your main application, unless of course your main application needs it, that's just good environment setup.</p>
+<p>The only reason I write about this is that there was some level of confusion amongst some of the people working on a project at work.  We had developed three engines to plugin to our main app which more or less just acted as the intermediary between the three.  Each of those engines was developed to be a standalone app.  The thought had always been, whatever is declared in the gemspec must also be declared in the Gemfile in the main app.  This turns out not to be true.  Hope that helps.</p>
+<p>One more fun fact.  If you have a gemspec file, you can call that file in your Gemfile and it will maintain your Gemfile from your gemspec and not have to maintain two separate files.</p>
+<p>@tab</p>

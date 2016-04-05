@@ -1,0 +1,63 @@
+---
+layout: post
+title: Adding more space to an LVM2 Partition[repost]
+date: 2011-04-01 15:30:11.000000000 -04:00
+categories:
+- Life
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"11380825";s:7:"blog_id";s:8:"11073946";s:9:"mod_stamp";s:19:"2011-04-01
+    19:30:11";}
+  geo_latitude: '40.950376'
+  geo_longitude: "-73.827356"
+  geo_accuracy: '967'
+  geo_address: Tuckahoe, NY 10707, USA
+  geo_public: '0'
+author: 
+---
+<p>So I'm not going to lie, I spent the better part of the morning trying to figure out how the hell I could resize my LVM2 Partition.  I scoured the interwebs looking for answers, reading blog posts and what have you. To which I finally found enough information to get what I needed.  I've decided to share this information with you.</p>
+<p>Let me establish that the scenario I will present to you will be just an example.  Some variables and paths will need to be changed according to your own machine.  This also assumes you have some extra partition that isn't currently being allocated.</p>
+<p>Also, you can read more about this from the following webpages:</p>
+<ul>
+<li><a href="http://www.howtoforge.com/logical-volume-manager-how-can-i-extend-a-volume-group">http://www.howtoforge.com/logical-volume-manager-how-can-i-extend-a-volume-group</a></li>
+<li><a href="http://www.tcpdump.com/kb/os/linux/lvm-resizing-guide/expand.html">http://www.tcpdump.com/kb/os/linux/lvm-resizing-guide/expand.html</a></li>
+<li><a href="http://tldp.org/HOWTO/LVM-HOWTO/extendlv.html">http://tldp.org/HOWTO/LVM-HOWTO/extendlv.html</a></li>
+</ul>
+<p>DISCLAIMER: Perform this task at your own risk. Changing around partitions is dangerous and can prevent you from accessing your data and make it completely unrecoverable. If you do this, please don't for get to create BACKUPs.</p>
+<p>Our first task is to use that unallocated space and create another virtual partition.<br />
+As either root or preferably as sudo, type:</p>
+<p><code>fdisk /dev/sda</code></p>
+<p>/dev/sda is interchangeable with whatever hard disk you have.<br />
+ You should see a screen come up with the prompt that looks like this.</p>
+<p><code>Command (m for help):</code></p>
+<p>This will be the command prompt we'll use to create a new partition. Type:</p>
+<p><code>Command (m for help): n<br />
+    l    logical<br />
+    p   physical<br />
+p<br />
+</code></p>
+<p>Assuming you want to use all of the unallocated space, just use the defaults.<br />
+Now to change it over to a LVM, type:</p>
+<p><code><br />
+  Command (m for help): t<br />
+  Partition number (1-3): 3         *This is the drive number that was created for me*<br />
+  Hex code (type L to list codes): 8e<br />
+  Command (m for help): w<br />
+</code></p>
+<p>The partition has been allocated and now needs to have a few finishing touches for the next steps.</p>
+<p><code>pvcreate /dev/sda3      *Again, change depending on what you have.*<br />
+</code></p>
+<p>Get the name of your Virtual Group that you'll be extending by typing </p>
+<p><code>vgdisplay</code></p>
+<p>With that name type the command:</p>
+<p><code>vgextend /dev/nameOfVG /dev/sda3</code></p>
+<p>You've now extended the group, but now comes the part where you need to extend the actual LVM.</p>
+<p>Let's assume we want to extend our drive by 10 Gigs. Type the commands</p>
+<p><code>lvextend -L +10G /dev/NameOfVG/root</code></p>
+<p>With the drive extended we now have to fill it in with ext2/ext3 file formatting. Type the commands</p>
+<p><code>resize2fs -p /dev/NameOfVG/root</code></p>
+<p>It will inevitably complain about it being online, but will extend it regardless. If you are using a different type of file system other than ext2 then I suggest you refer to the third link. It gives detailed instructions on how to use the other file types.</p>
+<p>There you have now just extended your drive by 10gigs.  </p>

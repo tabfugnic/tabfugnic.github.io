@@ -12,3 +12,5 @@ github_username:  tabfugnic
 markdown: kramdown
 paginate: 5
 permalink: pretty
+
+gems: [jekyll-paginate]

@@ -90,10 +90,18 @@ body {
   padding-bottom: 0;
 }
 
+.post-link {
+  outline: none;
+}
+
 .post-link .post-title {
-  margin-top: 0.25rem;
-  font-weight: 600;
   color: #333;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.post-link:hover .post-title {
+  text-decoration: underline;
 }
 
 .pagination {

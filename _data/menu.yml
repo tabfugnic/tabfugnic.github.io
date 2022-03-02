@@ -1,0 +1,16 @@
+entries:
+  - title: info
+    entries:
+      - title: about
+        url: about.html
+      - title: github repo
+        url: https://github.com/tabfugnic/tabfugnic.github.io
+
+  - title: posts
+    post_list:
+      limit: 5
+      show_more: true
+      show_more_text: See archive...
+      show_more_url: archive.html
+  - title: rss
+    url: feed.xml

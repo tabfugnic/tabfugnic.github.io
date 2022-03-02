@@ -1,5 +1,4 @@
 ---
-layout: post
 title: Getting Started with Octopress on Github
 date: 2013-11-15 11:38
 tags: octopress, class

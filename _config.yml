@@ -13,3 +13,4 @@ plugins:
   - jekyll-feed
 theme_config:
   appearance: dark
+  date_format: "%Y-%m-%d"
